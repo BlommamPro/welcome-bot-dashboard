@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../../../data/app.db"
+}
+
+model GuildConfig {
+  id             String   @id @default(cuid())
+  guildId        String   @unique
+
+  welcomeEnabled Boolean  @default(false)
+  welcomeChannel String?
+  welcomeMessage String?  @default("Bienvenido {user} a {server}")
+  welcomeImage   String?
+  welcomeEmbed   Boolean  @default(true)
+  welcomeColor   String   @default("#5865F2")
+
+  welcomeCardLayout       String  @default("centered") 
+
+  welcomeCardWidth          Int      @default(1024)
+  welcomeCardHeight         Int      @default(450)
+  welcomeCardBgColor        String   @default("#1a1a2e")
+  welcomeCardBgType         String   @default("solid")  
+  welcomeCardBgColor2       String   @default("#5865F2")
+  welcomeCardBgAngle        Int      @default(135)
+  welcomeCardBlur           Int      @default(0)        
+  welcomeCardOverlayColor   String   @default("#000000")
+  welcomeCardOverlayOpacity Float    @default(0.0)
+
+  welcomeCardBorderEnabled  Boolean  @default(false)
+  welcomeCardBorderColor    String   @default("#5865F2")
+  welcomeCardBorderWidth    Int      @default(4)
+  welcomeCardBorderRadius   Int      @default(0)
+
+  welcomeCardTitle          String   @default("¡Bienvenido!")
+  welcomeCardTitleColor     String   @default("#ff4757")
+  welcomeCardTitleSize      Int      @default(56)
+  welcomeCardTitleX         Int      @default(0)
+  welcomeCardTitleY         Int      @default(275)
+  welcomeCardTitleFont      String   @default("Inter")
+  welcomeCardTitleShadow    Boolean  @default(false)
+  welcomeCardTitleShadowColor String @default("#000000")
+  welcomeCardTitleShadowBlur  Int    @default(8)
+
+  welcomeCardSubtitle       String   @default("Eres el miembro #{count}")
+  welcomeCardSubtitleColor  String   @default("#ffffff")
+  welcomeCardSubtitleSize   Int      @default(32)
+  welcomeCardSubtitleX      Int      @default(0)
+  welcomeCardSubtitleY      Int      @default(355)
+  welcomeCardSubtitleFont   String   @default("Inter")
+  welcomeCardSubtitleShadow Boolean  @default(false)
+  welcomeCardSubtitleShadowColor String @default("#000000")
+  welcomeCardSubtitleShadowBlur  Int    @default(6)
+
+  welcomeCardUsername       Boolean  @default(true)
+  welcomeCardUsernameColor  String   @default("#ffffff")
+  welcomeCardUsernameSize   Int      @default(40)
+  welcomeCardUsernameX      Int      @default(0)
+  welcomeCardUsernameY      Int      @default(320)
+  welcomeCardUsernameFont   String   @default("Inter")
+  welcomeCardUsernameShadow Boolean  @default(false)
+
+  welcomeCardAvatarSize     Int      @default(160)
+  welcomeCardAvatarX        Int      @default(0)
+  welcomeCardAvatarY        Int      @default(80)
+  welcomeCardAvatarBorder   String   @default("#5865F2")
+  welcomeCardAvatarBorderW  Int      @default(6)
+  welcomeCardAvatarRound    Boolean  @default(true)
+
+  welcomeCardWatermarkEnabled Boolean @default(false)
+  welcomeCardWatermarkSize    Int     @default(48)
+  welcomeCardWatermarkPos     String  @default("bottom-right")
+  welcomeCardWatermarkOpacity Float   @default(0.5)
+
+  welcomeEmbedTitle         String?  @default("")
+  welcomeEmbedTitleUrl      String?  @default("")
+  welcomeEmbedAuthorName    String?  @default("")
+  welcomeEmbedAuthorIcon    String?  @default("")
+  welcomeEmbedThumbnail     String?  @default("")
+  welcomeEmbedFooter        String?  @default("Miembro #{count}")
+  welcomeEmbedFooterIcon    String?  @default("")
+  welcomeEmbedTimestamp     Boolean  @default(false)
+  welcomeEmbedShowCard      Boolean  @default(true)
+
+  welcomeAutoRoleEnabled Boolean @default(false)
+  welcomeAutoRoleIds     String  @default("")
+
+  welcomeDmEnabled Boolean @default(false)
+  welcomeDmMessage String? @default("¡Hola {username}! Bienvenido a **{server}**.")
+
+  verificationEnabled      Boolean @default(false)
+  verificationChannel      String?
+  verificationRoleId       String?
+  verificationMessageId    String?
+  verificationMessage      String? @default("Pulsa el botón de abajo para verificarte.")
+  verificationButtonText   String? @default("✅ Verificarme")
+
+  welcomeTrackInvites Boolean @default(false)
+
+  goodbyeEnabled Boolean  @default(false)
+  goodbyeChannel String?
+  goodbyeMessage String?  @default("Adios {username}...")
+  goodbyeImage   String?
+  goodbyeEmbed   Boolean  @default(true)
+  goodbyeColor   String   @default("#ED4245")
+
+  goodbyeCardLayout String @default("centered")
+
+  goodbyeCardWidth          Int      @default(1024)
+  goodbyeCardHeight         Int      @default(450)
+  goodbyeCardBgColor        String   @default("#1a1a2e")
+  goodbyeCardBgType         String   @default("solid")
+  goodbyeCardBgColor2       String   @default("#ED4245")
+  goodbyeCardBgAngle        Int      @default(135)
+  goodbyeCardBlur           Int      @default(0)
+  goodbyeCardOverlayColor   String   @default("#000000")
+  goodbyeCardOverlayOpacity Float    @default(0.0)
+
+  goodbyeCardBorderEnabled  Boolean  @default(false)
+  goodbyeCardBorderColor    String   @default("#ED4245")
+  goodbyeCardBorderWidth    Int      @default(4)
+  goodbyeCardBorderRadius   Int      @default(0)
+
+  goodbyeCardTitle          String   @default("¡Adiós!")
+  goodbyeCardTitleColor     String   @default("#ED4245")
+  goodbyeCardTitleSize      Int      @default(56)
+  goodbyeCardTitleX         Int      @default(0)
+  goodbyeCardTitleY         Int      @default(275)
+  goodbyeCardTitleFont      String   @default("Inter")
+  goodbyeCardTitleShadow    Boolean  @default(false)
+  goodbyeCardTitleShadowColor String @default("#000000")
+  goodbyeCardTitleShadowBlur  Int    @default(8)
+
+  goodbyeCardSubtitle       String   @default("{username} nos deja...")
+  goodbyeCardSubtitleColor  String   @default("#ffffff")
+  goodbyeCardSubtitleSize   Int      @default(32)
+  goodbyeCardSubtitleX      Int      @default(0)
+  goodbyeCardSubtitleY      Int      @default(355)
+  goodbyeCardSubtitleFont   String   @default("Inter")
+  goodbyeCardSubtitleShadow Boolean  @default(false)
+  goodbyeCardSubtitleShadowColor String @default("#000000")
+  goodbyeCardSubtitleShadowBlur  Int    @default(6)
+
+  goodbyeCardUsername       Boolean  @default(true)
+  goodbyeCardUsernameColor  String   @default("#ffffff")
+  goodbyeCardUsernameSize   Int      @default(40)
+  goodbyeCardUsernameX      Int      @default(0)
+  goodbyeCardUsernameY      Int      @default(320)
+  goodbyeCardUsernameFont   String   @default("Inter")
+  goodbyeCardUsernameShadow Boolean  @default(false)
+
+  goodbyeCardAvatarSize     Int      @default(160)
+  goodbyeCardAvatarX        Int      @default(0)
+  goodbyeCardAvatarY        Int      @default(80)
+  goodbyeCardAvatarBorder   String   @default("#ED4245")
+  goodbyeCardAvatarBorderW  Int      @default(6)
+  goodbyeCardAvatarRound    Boolean  @default(true)
+
+  goodbyeCardWatermarkEnabled Boolean @default(false)
+  goodbyeCardWatermarkSize    Int     @default(48)
+  goodbyeCardWatermarkPos     String  @default("bottom-right")
+  goodbyeCardWatermarkOpacity Float   @default(0.5)
+
+  goodbyeEmbedTitle         String?  @default("")
+  goodbyeEmbedTitleUrl      String?  @default("")
+  goodbyeEmbedAuthorName    String?  @default("")
+  goodbyeEmbedAuthorIcon    String?  @default("")
+  goodbyeEmbedThumbnail     String?  @default("")
+  goodbyeEmbedFooter        String?  @default("")
+  goodbyeEmbedFooterIcon    String?  @default("")
+  goodbyeEmbedTimestamp     Boolean  @default(false)
+  goodbyeEmbedShowCard      Boolean  @default(true)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis servidores</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .guild-card.no-bot { opacity: 0.75; }
+    .guild-card.no-bot:hover { opacity: 1; }
+    .badge {
+      display: inline-block;
+      padding: .2rem .5rem;
+      border-radius: 4px;
+      font-size: .75rem;
+      font-weight: bold;
+      margin-top: .3rem;
+    }
+    .badge.no { background: #f23f4333; color: #f23f43; }
+    .invite-btn {
+      display: inline-block;
+      background: #5865f2;
+      color: white;
+      padding: .35rem .8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: .8rem;
+      margin-top: .4rem;
+      font-weight: 600;
+    }
+    .invite-btn:hover { background: #4752c4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Servidores administrados</h1>
+    <div class="user">
+      <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" />
+      <span><%= user.username %></span>
+      <a href="/logout">Salir</a>
+    </div>
+  </header>
+  <main class="grid">
+    <% guilds.forEach(g => { const c = configs[g.id]; %>
+      <% if (g.hasBot) { %>
+        <a class="guild-card" href="/guilds/<%= g.id %>">
+          <% if (g.icon) { %>
+            <img src="https://cdn.discordapp.com/icons/<%= g.id %>/<%= g.icon %>.png" />
+          <% } else { %>
+            <div class="placeholder"><%= g.name[0] %></div>
+          <% } %>
+          <div>
+            <h3><%= g.name %></h3>
+            <p>
+              <%= c?.welcomeEnabled ? '🟢 Bienvenidas ON' : '⚪ Bienvenidas OFF' %> ·
+              <%= c?.goodbyeEnabled ? '🟢 Despedidas ON' : '⚪ Despedidas OFF' %>
+            </p>
+          </div>
+        </a>
+      <% } else { %>
+        <div class="guild-card no-bot">
+          <% if (g.icon) { %>
+            <img src="https://cdn.discordapp.com/icons/<%= g.id %>/<%= g.icon %>.png" />
+          <% } else { %>
+            <div class="placeholder"><%= g.name[0] %></div>
+          <% } %>
+          <div>
+            <h3><%= g.name %></h3>
+            <span class="badge no">❌ Bot no invitado</span>
+            <br />
+            <a class="invite-btn"
+               href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&permissions=268454928&scope=bot%20applications.commands&guild_id=<%= g.id %>&disable_guild_select=true"
+               target="_blank">
+              ➕ Invitar al bot
+            </a>
+          </div>
+        </div>
+      <% } %>
+    <% }) %>
+  </main>
+</body>
+</html>

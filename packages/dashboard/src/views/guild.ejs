@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= guild.name %> — Configuración</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <a href="/guilds">← Volver</a>
+    <h1><%= guild.name %></h1>
+    <span id="saveBadge" class="save-badge">✅ Todo guardado</span>
+  </header>
+
+  <main class="layout-2col">
+    <div class="config-panel">
+      <nav class="tabs">
+        <div class="tab-group-title">Bienvenida</div>
+        <button type="button" class="tab active" data-tab="welcome-general">👋 General</button>
+        <button type="button" class="tab" data-tab="welcome-embed">📝 Embed</button>
+        <button type="button" class="tab" data-tab="welcome-card">🎨 Tarjeta</button>
+        <button type="button" class="tab" data-tab="welcome-avatar">👤 Avatar</button>
+        <button type="button" class="tab" data-tab="welcome-text">✏️ Textos</button>
+
+        <div class="tab-group-title">Automatización</div>
+        <button type="button" class="tab" data-tab="autorole">🎭 Auto-rol</button>
+        <button type="button" class="tab" data-tab="dm">✉️ DM</button>
+        <button type="button" class="tab" data-tab="verify">🔒 Verificación</button>
+        <button type="button" class="tab" data-tab="invites">📨 Invitaciones</button>
+
+        <div class="tab-group-title">Despedida</div>
+        <button type="button" class="tab" data-tab="goodbye-general">🚪 General</button>
+        <button type="button" class="tab" data-tab="goodbye-embed">📝 Embed</button>
+        <button type="button" class="tab" data-tab="goodbye-card">🎨 Tarjeta</button>
+        <button type="button" class="tab" data-tab="goodbye-avatar">👤 Avatar</button>
+        <button type="button" class="tab" data-tab="goodbye-text">✏️ Textos</button>
+      </nav>
+
+      <form method="POST" enctype="multipart/form-data" id="configForm">
+
+        <!-- ============ BIENVENIDA GENERAL ============ -->
+        <section class="tab-panel active" data-panel="welcome-general">
+          <div class="card">
+            <h2>👋 Bienvenida — General</h2>
+            <label><input type="checkbox" name="welcomeEnabled" <%= config.welcomeEnabled ? 'checked' : '' %> /> Activado</label>
+            <label>Canales de bienvenida
+              <input type="text" class="search-box" data-search-for="welcomeChannelList" placeholder="🔍 Buscar canal..." />
+              <div id="welcomeChannelList" class="role-list"><p><small>Cargando...</small></p></div>
+              <input type="hidden" name="welcomeChannel" id="welcomeChannel" value="<%= config.welcomeChannel ?? '' %>" />
+            </label>
+            <label>Mensaje del embed
+              <textarea name="welcomeMessage" rows="3"><%= config.welcomeMessage ?? '' %></textarea>
+              <small>Variables: {user} {username} {server} {count} {inviter}</small>
+            </label>
+            <label>Color del embed <input type="color" name="welcomeColor" value="<%= config.welcomeColor %>" /></label>
+            <button type="button" class="btn-test" data-type="welcome">🧪 Probar en Discord</button>
+          </div>
+        </section>
+
+        <!-- ============ BIENVENIDA EMBED ============ -->
+        <section class="tab-panel" data-panel="welcome-embed">
+          <div class="card">
+            <h2>📝 Embed — Título y autor</h2>
+            <label>Título <input type="text" name="welcomeEmbedTitle" value="<%= config.welcomeEmbedTitle ?? '' %>" /></label>
+            <label>URL del título <input type="text" name="welcomeEmbedTitleUrl" value="<%= config.welcomeEmbedTitleUrl ?? '' %>" /></label>
+            <div class="form-row">
+              <label>Autor <input type="text" name="welcomeEmbedAuthorName" value="<%= config.welcomeEmbedAuthorName ?? '' %>" /></label>
+              <label>Autor icono <input type="text" name="welcomeEmbedAuthorIcon" value="<%= config.welcomeEmbedAuthorIcon ?? '' %>" /></label>
+            </div>
+          </div>
+          <div class="card">
+            <h2>📝 Embed — Thumbnail y footer</h2>
+            <label>Thumbnail <input type="text" name="welcomeEmbedThumbnail" value="<%= config.welcomeEmbedThumbnail ?? '' %>" /></label>
+            <div class="form-row">
+              <label>Footer <input type="text" name="welcomeEmbedFooter" value="<%= config.welcomeEmbedFooter ?? '' %>" /></label>
+              <label>Footer icono <input type="text" name="welcomeEmbedFooterIcon" value="<%= config.welcomeEmbedFooterIcon ?? '' %>" /></label>
+            </div>
+            <label><input type="checkbox" name="welcomeEmbedTimestamp" <%= config.welcomeEmbedTimestamp ? 'checked' : '' %> /> Timestamp</label>
+            <label><input type="checkbox" name="welcomeEmbedShowCard" <%= config.welcomeEmbedShowCard ? 'checked' : '' %> /> Mostrar tarjeta</label>
+          </div>
+        </section>
+
+        <!-- ============ BIENVENIDA TARJETA ============ -->
+        <section class="tab-panel" data-panel="welcome-card">
+          <div class="card">
+            <h2>🎨 Presets</h2>
+            <div class="preset-grid">
+              <button type="button" class="preset-btn" data-preset="gaming" data-prefix="welcome">🎮 Gaming</button>
+              <button type="button" class="preset-btn" data-preset="elegant" data-prefix="welcome">✨ Elegante</button>
+              <button type="button" class="preset-btn" data-preset="kawaii" data-prefix="welcome">🌸 Kawaii</button>
+              <button type="button" class="preset-btn" data-preset="minimal" data-prefix="welcome">◾ Minimalista</button>
+              <button type="button" class="preset-btn" data-preset="discord" data-prefix="welcome">💬 Discord</button>
+              <button type="button" class="preset-btn" data-preset="cyberpunk" data-prefix="welcome">🌃 Cyberpunk</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Layout</h2>
+            <label>Estilo
+              <select name="welcomeCardLayout">
+                <option value="centered" <%= config.welcomeCardLayout === 'centered' ? 'selected' : '' %>>Centrado</option>
+                <option value="horizontal" <%= config.welcomeCardLayout === 'horizontal' ? 'selected' : '' %>>Horizontal</option>
+                <option value="minimal" <%= config.welcomeCardLayout === 'minimal' ? 'selected' : '' %>>Minimal</option>
+                <option value="banner" <%= config.welcomeCardLayout === 'banner' ? 'selected' : '' %>>Banner</option>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Ancho <input type="number" name="welcomeCardWidth" value="<%= config.welcomeCardWidth %>" /></label>
+              <label>Alto <input type="number" name="welcomeCardHeight" value="<%= config.welcomeCardHeight %>" /></label>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Paletas de colores</h2>
+            <div class="palette-grid">
+              <button type="button" class="palette-btn" data-palette="discord" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#5865F2,#EB459E)"></span> Discord
+              </button>
+              <button type="button" class="palette-btn" data-palette="cyberpunk" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#F0DB4F,#FF00FF)"></span> Cyberpunk
+              </button>
+              <button type="button" class="palette-btn" data-palette="pastel" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#FFB3BA,#BAE1FF)"></span> Pastel
+              </button>
+              <button type="button" class="palette-btn" data-palette="neon" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#00FFB2,#FF006E)"></span> Neón
+              </button>
+              <button type="button" class="palette-btn" data-palette="minimal" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#2b2d31,#dbdee1)"></span> Minimal
+              </button>
+              <button type="button" class="palette-btn" data-palette="sunset" data-prefix="welcome">
+                <span class="swatch" style="background:linear-gradient(135deg,#FF6B6B,#FFD93D)"></span> Sunset
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Fondo</h2>
+            <label>Tipo
+              <select name="welcomeCardBgType">
+                <option value="solid" <%= config.welcomeCardBgType === 'solid' ? 'selected' : '' %>>Sólido</option>
+                <option value="linear" <%= config.welcomeCardBgType === 'linear' ? 'selected' : '' %>>Degradado lineal</option>
+                <option value="radial" <%= config.welcomeCardBgType === 'radial' ? 'selected' : '' %>>Degradado radial</option>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Color 1 <input type="color" name="welcomeCardBgColor" value="<%= config.welcomeCardBgColor %>" /></label>
+              <label>Color 2 <input type="color" name="welcomeCardBgColor2" value="<%= config.welcomeCardBgColor2 %>" /></label>
+            </div>
+            <label>Ángulo <input type="number" name="welcomeCardBgAngle" value="<%= config.welcomeCardBgAngle %>" min="0" max="360" /></label>
+            <label>Blur de fondo <input type="number" name="welcomeCardBlur" value="<%= config.welcomeCardBlur %>" min="0" max="50" /></label>
+            <div class="form-row">
+              <label>Overlay color <input type="color" name="welcomeCardOverlayColor" value="<%= config.welcomeCardOverlayColor %>" /></label>
+              <label>Overlay opacidad <input type="number" step="0.05" min="0" max="1" name="welcomeCardOverlayOpacity" value="<%= config.welcomeCardOverlayOpacity %>" /></label>
+            </div>
+            <label>Imagen de fondo <input type="file" name="welcomeImage" accept="image/*" /></label>
+            <% if (config.welcomeImage) { %>
+              <div>
+                <img class="preview" src="/uploads/<%= config.welcomeImage %>" style="max-width:200px" />
+                <label><input type="checkbox" name="removeWelcomeImage" /> Eliminar imagen</label>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Marco</h2>
+            <label><input type="checkbox" name="welcomeCardBorderEnabled" <%= config.welcomeCardBorderEnabled ? 'checked' : '' %> /> Activar marco</label>
+            <div class="form-row">
+              <label>Color <input type="color" name="welcomeCardBorderColor" value="<%= config.welcomeCardBorderColor %>" /></label>
+              <label>Grosor <input type="number" name="welcomeCardBorderWidth" value="<%= config.welcomeCardBorderWidth %>" min="0" max="20" /></label>
+            </div>
+            <label>Radio esquinas <input type="number" name="welcomeCardBorderRadius" value="<%= config.welcomeCardBorderRadius %>" min="0" max="80" /></label>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Watermark</h2>
+            <label><input type="checkbox" name="welcomeCardWatermarkEnabled" <%= config.welcomeCardWatermarkEnabled ? 'checked' : '' %> /> Activar</label>
+            <div class="form-row">
+              <label>Tamaño <input type="number" name="welcomeCardWatermarkSize" value="<%= config.welcomeCardWatermarkSize %>" /></label>
+              <label>Posición
+                <select name="welcomeCardWatermarkPos">
+                  <option value="top-left" <%= config.welcomeCardWatermarkPos === 'top-left' ? 'selected' : '' %>>Arriba izq</option>
+                  <option value="top-right" <%= config.welcomeCardWatermarkPos === 'top-right' ? 'selected' : '' %>>Arriba der</option>
+                  <option value="bottom-left" <%= config.welcomeCardWatermarkPos === 'bottom-left' ? 'selected' : '' %>>Abajo izq</option>
+                  <option value="bottom-right" <%= config.welcomeCardWatermarkPos === 'bottom-right' ? 'selected' : '' %>>Abajo der</option>
+                </select>
+              </label>
+            </div>
+            <label>Opacidad <input type="number" step="0.05" min="0" max="1" name="welcomeCardWatermarkOpacity" value="<%= config.welcomeCardWatermarkOpacity %>" /></label>
+          </div>
+        </section>
+
+        <!-- ============ BIENVENIDA AVATAR ============ -->
+        <section class="tab-panel" data-panel="welcome-avatar">
+          <div class="card">
+            <h2>👤 Avatar</h2>
+            <div class="form-row-3">
+              <label>Tamaño <input type="number" name="welcomeCardAvatarSize" value="<%= config.welcomeCardAvatarSize %>" /></label>
+              <label>Posición X <input type="number" name="welcomeCardAvatarX" value="<%= config.welcomeCardAvatarX %>" /></label>
+              <label>Posición Y <input type="number" name="welcomeCardAvatarY" value="<%= config.welcomeCardAvatarY %>" /></label>
+            </div>
+            <div class="form-row">
+              <label>Borde ancho <input type="number" name="welcomeCardAvatarBorderW" value="<%= config.welcomeCardAvatarBorderW %>" /></label>
+              <label>Color borde <input type="color" name="welcomeCardAvatarBorder" value="<%= config.welcomeCardAvatarBorder %>" /></label>
+            </div>
+            <label><input type="checkbox" name="welcomeCardAvatarRound" <%= config.welcomeCardAvatarRound ? 'checked' : '' %> /> Redondo</label>
+          </div>
+        </section>
+
+        <!-- ============ BIENVENIDA TEXTOS ============ -->
+        <section class="tab-panel" data-panel="welcome-text">
+          <div class="card">
+            <h2>✏️ Nombre de usuario</h2>
+            <label><input type="checkbox" name="welcomeCardUsername" <%= config.welcomeCardUsername ? 'checked' : '' %> /> Mostrar</label>
+            <div class="form-row">
+              <label>Color <input type="color" name="welcomeCardUsernameColor" value="<%= config.welcomeCardUsernameColor %>" /></label>
+              <label>Tamaño <input type="number" name="welcomeCardUsernameSize" value="<%= config.welcomeCardUsernameSize %>" /></label>
+            </div>
+            <label>Fuente
+              <select name="welcomeCardUsernameFont">
+                <% ['Inter','Poppins','Montserrat','Roboto','RobotoMono'].forEach(f => { %>
+                  <option value="<%= f %>" <%= config.welcomeCardUsernameFont === f ? 'selected' : '' %>><%= f %></option>
+                <% }) %>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Posición X <input type="number" name="welcomeCardUsernameX" value="<%= config.welcomeCardUsernameX %>" /></label>
+              <label>Posición Y <input type="number" name="welcomeCardUsernameY" value="<%= config.welcomeCardUsernameY %>" /></label>
+            </div>
+            <label><input type="checkbox" name="welcomeCardUsernameShadow" <%= config.welcomeCardUsernameShadow ? 'checked' : '' %> /> Sombra</label>
+          </div>
+
+          <div class="card">
+            <h2>✏️ Título</h2>
+            <label>Texto <input type="text" name="welcomeCardTitle" value="<%= config.welcomeCardTitle %>" /></label>
+            <div class="form-row">
+              <label>Color <input type="color" name="welcomeCardTitleColor" value="<%= config.welcomeCardTitleColor %>" /></label>
+              <label>Tamaño <input type="number" name="welcomeCardTitleSize" value="<%= config.welcomeCardTitleSize %>" /></label>
+            </div>
+            <label>Fuente
+              <select name="welcomeCardTitleFont">
+                <% ['Inter','Poppins','Montserrat','Roboto','RobotoMono'].forEach(f => { %>
+                  <option value="<%= f %>" <%= config.welcomeCardTitleFont === f ? 'selected' : '' %>><%= f %></option>
+                <% }) %>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Posición X <input type="number" name="welcomeCardTitleX" value="<%= config.welcomeCardTitleX %>" /></label>
+              <label>Posición Y <input type="number" name="welcomeCardTitleY" value="<%= config.welcomeCardTitleY %>" /></label>
+            </div>
+            <label><input type="checkbox" name="welcomeCardTitleShadow" <%= config.welcomeCardTitleShadow ? 'checked' : '' %> /> Sombra</label>
+            <div class="form-row">
+              <label>Color sombra <input type="color" name="welcomeCardTitleShadowColor" value="<%= config.welcomeCardTitleShadowColor %>" /></label>
+              <label>Blur sombra <input type="number" name="welcomeCardTitleShadowBlur" value="<%= config.welcomeCardTitleShadowBlur %>" /></label>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>✏️ Subtítulo</h2>
+            <label>Texto <input type="text" name="welcomeCardSubtitle" value="<%= config.welcomeCardSubtitle %>" /></label>
+            <div class="form-row">
+              <label>Color <input type="color" name="welcomeCardSubtitleColor" value="<%= config.welcomeCardSubtitleColor %>" /></label>
+              <label>Tamaño <input type="number" name="welcomeCardSubtitleSize" value="<%= config.welcomeCardSubtitleSize %>" /></label>
+            </div>
+            <label>Fuente
+              <select name="welcomeCardSubtitleFont">
+                <% ['Inter','Poppins','Montserrat','Roboto','RobotoMono'].forEach(f => { %>
+                  <option value="<%= f %>" <%= config.welcomeCardSubtitleFont === f ? 'selected' : '' %>><%= f %></option>
+                <% }) %>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Posición X <input type="number" name="welcomeCardSubtitleX" value="<%= config.welcomeCardSubtitleX %>" /></label>
+              <label>Posición Y <input type="number" name="welcomeCardSubtitleY" value="<%= config.welcomeCardSubtitleY %>" /></label>
+            </div>
+            <label><input type="checkbox" name="welcomeCardSubtitleShadow" <%= config.welcomeCardSubtitleShadow ? 'checked' : '' %> /> Sombra</label>
+          </div>
+        </section>
+
+        <!-- ============ AUTOROLE ============ -->
+        <section class="tab-panel" data-panel="autorole">
+          <div class="card">
+            <h2>🎭 Auto-rol al entrar</h2>
+            <label><input type="checkbox" name="welcomeAutoRoleEnabled" <%= config.welcomeAutoRoleEnabled ? 'checked' : '' %> /> Activado</label>
+            <label>Roles a asignar
+              <input type="text" class="search-box" data-search-for="autoRoleList" placeholder="🔍 Buscar rol..." />
+              <div id="autoRoleList" class="role-list"><p><small>Cargando...</small></p></div>
+              <input type="hidden" name="welcomeAutoRoleIds" id="welcomeAutoRoleIds" value="<%= config.welcomeAutoRoleIds ?? '' %>" />
+            </label>
+          </div>
+        </section>
+
+        <!-- ============ DM ============ -->
+        <section class="tab-panel" data-panel="dm">
+          <div class="card">
+            <h2>✉️ DM de bienvenida</h2>
+            <label><input type="checkbox" name="welcomeDmEnabled" <%= config.welcomeDmEnabled ? 'checked' : '' %> /> Enviar DM</label>
+            <label>Mensaje
+              <textarea name="welcomeDmMessage" rows="4"><%= config.welcomeDmMessage ?? '' %></textarea>
+            </label>
+          </div>
+        </section>
+
+        <!-- ============ VERIFICACIÓN ============ -->
+        <section class="tab-panel" data-panel="verify">
+          <div class="card">
+            <h2>🔒 Verificación</h2>
+            <label><input type="checkbox" name="verificationEnabled" <%= config.verificationEnabled ? 'checked' : '' %> /> Activado</label>
+            <label>Canal
+              <input type="text" class="search-box" data-search-for="verificationChannelList" placeholder="🔍 Buscar canal..." />
+              <div id="verificationChannelList" class="role-list"><p><small>Cargando...</small></p></div>
+              <input type="hidden" name="verificationChannel" id="verificationChannel" value="<%= config.verificationChannel ?? '' %>" />
+            </label>
+            <label>Rol
+              <select name="verificationRoleId" id="verificationRoleId"><option value="">— Cargando —</option></select>
+            </label>
+            <label>Mensaje <textarea name="verificationMessage" rows="3"><%= config.verificationMessage ?? '' %></textarea></label>
+            <label>Texto del botón <input type="text" name="verificationButtonText" value="<%= config.verificationButtonText ?? '✅ Verificarme' %>" /></label>
+            <button type="button" class="btn-test" id="btnSetupVerification">📤 Enviar al canal</button>
+          </div>
+        </section>
+
+        <!-- ============ INVITACIONES ============ -->
+        <section class="tab-panel" data-panel="invites">
+          <div class="card">
+            <h2>📨 Tracking de invitaciones</h2>
+            <label><input type="checkbox" name="welcomeTrackInvites" <%= config.welcomeTrackInvites ? 'checked' : '' %> /> Activar</label>
+          </div>
+        </section>
+
+        <!-- ============ DESPEDIDA GENERAL ============ -->
+        <section class="tab-panel" data-panel="goodbye-general">
+          <div class="card">
+            <h2>🚪 Despedida — General</h2>
+            <label><input type="checkbox" name="goodbyeEnabled" <%= config.goodbyeEnabled ? 'checked' : '' %> /> Activado</label>
+            <label>Canales
+              <input type="text" class="search-box" data-search-for="goodbyeChannelList" placeholder="🔍 Buscar canal..." />
+              <div id="goodbyeChannelList" class="role-list"><p><small>Cargando...</small></p></div>
+              <input type="hidden" name="goodbyeChannel" id="goodbyeChannel" value="<%= config.goodbyeChannel ?? '' %>" />
+            </label>
+            <label>Mensaje <textarea name="goodbyeMessage" rows="3"><%= config.goodbyeMessage ?? '' %></textarea></label>
+            <label>Color <input type="color" name="goodbyeColor" value="<%= config.goodbyeColor %>" /></label>
+            <button type="button" class="btn-test" data-type="goodbye">🧪 Probar</button>
+          </div>
+        </section>
+
+        <!-- ============ DESPEDIDA EMBED ============ -->
+        <section class="tab-panel" data-panel="goodbye-embed">
+          <div class="card">
+            <h2>📝 Embed</h2>
+            <label>Título <input type="text" name="goodbyeEmbedTitle" value="<%= config.goodbyeEmbedTitle ?? '' %>" /></label>
+            <label>Autor <input type="text" name="goodbyeEmbedAuthorName" value="<%= config.goodbyeEmbedAuthorName ?? '' %>" /></label>
+            <label>Footer <input type="text" name="goodbyeEmbedFooter" value="<%= config.goodbyeEmbedFooter ?? '' %>" /></label>
+            <label><input type="checkbox" name="goodbyeEmbedShowCard" <%= config.goodbyeEmbedShowCard ? 'checked' : '' %> /> Mostrar tarjeta</label>
+          </div>
+        </section>
+
+        <!-- ============ DESPEDIDA TARJETA ============ -->
+        <section class="tab-panel" data-panel="goodbye-card">
+          <div class="card">
+            <h2>🎨 Presets</h2>
+            <div class="preset-grid">
+              <button type="button" class="preset-btn" data-preset="gaming" data-prefix="goodbye">🎮 Gaming</button>
+              <button type="button" class="preset-btn" data-preset="elegant" data-prefix="goodbye">✨ Elegante</button>
+              <button type="button" class="preset-btn" data-preset="kawaii" data-prefix="goodbye">🌸 Kawaii</button>
+              <button type="button" class="preset-btn" data-preset="minimal" data-prefix="goodbye">◾ Minimal</button>
+              <button type="button" class="preset-btn" data-preset="discord" data-prefix="goodbye">💬 Discord</button>
+              <button type="button" class="preset-btn" data-preset="cyberpunk" data-prefix="goodbye">🌃 Cyberpunk</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Paletas</h2>
+            <div class="palette-grid">
+              <button type="button" class="palette-btn" data-palette="discord" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#5865F2,#EB459E)"></span> Discord
+              </button>
+              <button type="button" class="palette-btn" data-palette="cyberpunk" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#F0DB4F,#FF00FF)"></span> Cyberpunk
+              </button>
+              <button type="button" class="palette-btn" data-palette="pastel" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#FFB3BA,#BAE1FF)"></span> Pastel
+              </button>
+              <button type="button" class="palette-btn" data-palette="neon" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#00FFB2,#FF006E)"></span> Neón
+              </button>
+              <button type="button" class="palette-btn" data-palette="minimal" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#2b2d31,#dbdee1)"></span> Minimal
+              </button>
+              <button type="button" class="palette-btn" data-palette="sunset" data-prefix="goodbye">
+                <span class="swatch" style="background:linear-gradient(135deg,#FF6B6B,#FFD93D)"></span> Sunset
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Fondo</h2>
+            <label>Tipo
+              <select name="goodbyeCardBgType">
+                <option value="solid" <%= config.goodbyeCardBgType === 'solid' ? 'selected' : '' %>>Sólido</option>
+                <option value="linear" <%= config.goodbyeCardBgType === 'linear' ? 'selected' : '' %>>Lineal</option>
+                <option value="radial" <%= config.goodbyeCardBgType === 'radial' ? 'selected' : '' %>>Radial</option>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>Color 1 <input type="color" name="goodbyeCardBgColor" value="<%= config.goodbyeCardBgColor %>" /></label>
+              <label>Color 2 <input type="color" name="goodbyeCardBgColor2" value="<%= config.goodbyeCardBgColor2 %>" /></label>
+            </div>
+            <label>Ángulo <input type="number" name="goodbyeCardBgAngle" value="<%= config.goodbyeCardBgAngle %>" /></label>
+            <label>Blur <input type="number" name="goodbyeCardBlur" value="<%= config.goodbyeCardBlur %>" min="0" max="50" /></label>
+            <label>Imagen <input type="file" name="goodbyeImage" accept="image/*" /></label>
+            <% if (config.goodbyeImage) { %>
+              <div>
+                <img class="preview" src="/uploads/<%= config.goodbyeImage %>" style="max-width:200px" />
+                <label><input type="checkbox" name="removeGoodbyeImage" /> Eliminar</label>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Marco</h2>
+            <label><input type="checkbox" name="goodbyeCardBorderEnabled" <%= config.goodbyeCardBorderEnabled ? 'checked' : '' %> /> Activar</label>
+            <div class="form-row">
+              <label>Color <input type="color" name="goodbyeCardBorderColor" value="<%= config.goodbyeCardBorderColor %>" /></label>
+              <label>Grosor <input type="number" name="goodbyeCardBorderWidth" value="<%= config.goodbyeCardBorderWidth %>" /></label>
+            </div>
+            <label>Radio <input type="number" name="goodbyeCardBorderRadius" value="<%= config.goodbyeCardBorderRadius %>" /></label>
+          </div>
+
+          <div class="card">
+            <h2>🎨 Watermark</h2>
+            <label><input type="checkbox" name="goodbyeCardWatermarkEnabled" <%= config.goodbyeCardWatermarkEnabled ? 'checked' : '' %> /> Activar</label>
+            <div class="form-row">
+              <label>Tamaño <input type="number" name="goodbyeCardWatermarkSize" value="<%= config.goodbyeCardWatermarkSize %>" /></label>
+              <label>Posición
+                <select name="goodbyeCardWatermarkPos">
+                  <option value="top-left" <%= config.goodbyeCardWatermarkPos === 'top-left' ? 'selected' : '' %>>↖</option>
+                  <option value="top-right" <%= config.goodbyeCardWatermarkPos === 'top-right' ? 'selected' : '' %>>↗</option>
+                  <option value="bottom-left" <%= config.goodbyeCardWatermarkPos === 'bottom-left' ? 'selected' : '' %>>↙</option>
+                  <option value="bottom-right" <%= config.goodbyeCardWatermarkPos === 'bottom-right' ? 'selected' : '' %>>↘</option>
+                </select>
+              </label>
+            </div>
+            <label>Opacidad <input type="number" step="0.05" min="0" max="1" name="goodbyeCardWatermarkOpacity" value="<%= config.goodbyeCardWatermarkOpacity %>" /></label>
+          </div>
+        </section>
+
+        <!-- ============ DESPEDIDA AVATAR ============ -->
+        <section class="tab-panel" data-panel="goodbye-avatar">
+          <div class="card">
+            <h2>👤 Avatar</h2>
+            <div class="form-row-3">
+              <label>Tamaño <input type="number" name="goodbyeCardAvatarSize" value="<%= config.goodbyeCardAvatarSize %>" /></label>
+              <label>X <input type="number" name="goodbyeCardAvatarX" value="<%= config.goodbyeCardAvatarX %>" /></label>
+              <label>Y <input type="number" name="goodbyeCardAvatarY" value="<%= config.goodbyeCardAvatarY %>" /></label>
+            </div>
+            <div class="form-row">
+              <label>Borde ancho <input type="number" name="goodbyeCardAvatarBorderW" value="<%= config.goodbyeCardAvatarBorderW %>" /></label>
+              <label>Color <input type="color" name="goodbyeCardAvatarBorder" value="<%= config.goodbyeCardAvatarBorder %>" /></label>
+            </div>
+            <label><input type="checkbox" name="goodbyeCardAvatarRound" <%= config.goodbyeCardAvatarRound ? 'checked' : '' %> /> Redondo</label>
+          </div>
+        </section>
+
+        <!-- ============ DESPEDIDA TEXTOS ============ -->
+        <section class="tab-panel" data-panel="goodbye-text">
+          <div class="card">
+            <h2>✏️ Textos</h2>
+            <label>Título <input type="text" name="goodbyeCardTitle" value="<%= config.goodbyeCardTitle %>" /></label>
+            <label>Subtítulo <input type="text" name="goodbyeCardSubtitle" value="<%= config.goodbyeCardSubtitle %>" /></label>
+            <div class="form-row">
+              <label>Color título <input type="color" name="goodbyeCardTitleColor" value="<%= config.goodbyeCardTitleColor %>" /></label>
+              <label>Color subtítulo <input type="color" name="goodbyeCardSubtitleColor" value="<%= config.goodbyeCardSubtitleColor %>" /></label>
+            </div>
+          </div>
+        </section>
+
+        <button class="btn" type="submit" style="width:100%;">💾 Guardar cambios</button>
+      </form>
+    </div>
+
+    <!-- ============ PREVIEW ============ -->
+    <aside class="preview-card">
+      <h3>Vista previa <small style="color:#80848e;font-weight:400;font-size:.75rem;">(arrastra para mover)</small></h3>
+      <div class="preview-tabs">
+        <button type="button" class="preview-tab active" data-preview="welcome">👋 Bienvenida</button>
+        <button type="button" class="preview-tab" data-preview="goodbye">👋 Despedida</button>
+      </div>
+      <div class="discord-mockup">
+        <div class="discord-message">
+          <div class="discord-avatar-col"><div class="discord-mini-avatar"></div></div>
+          <div class="discord-content">
+            <div class="discord-header">
+              <span class="discord-username">Bot</span>
+              <span class="discord-badge">BOT</span>
+              <span class="discord-timestamp">hoy a las 12:00</span>
+            </div>
+            <div class="discord-embed">
+              <div class="discord-embed-bar" id="embedBar"></div>
+              <div class="discord-embed-body">
+                <div class="discord-embed-author" id="embedAuthor" style="display:none;">
+                  <img id="embedAuthorIcon" /><span id="embedAuthorName"></span>
+                </div>
+                <div class="discord-embed-title" id="embedTitle" style="display:none;"></div>
+                <div class="discord-embed-desc" id="embedDesc"></div>
+                <div class="preview-wrapper" id="previewWrapper">
+                  <div id="previewSkeleton" class="preview-skeleton">
+                    <div class="spinner"></div>
+                  </div>
+                  <img id="previewImg" class="discord-embed-image" src="" alt="preview" draggable="false" style="display:none;" />
+                  <div class="drag-marker" data-target="avatar" id="markerAvatar" style="display:none;">👤</div>
+                  <div class="drag-marker" data-target="username" id="markerUsername" style="display:none;">@</div>
+                  <div class="drag-marker" data-target="title" id="markerTitle" style="display:none;">T</div>
+                  <div class="drag-marker" data-target="subtitle" id="markerSubtitle" style="display:none;">S</div>
+                </div>
+                <div class="discord-embed-footer" id="embedFooter" style="display:none;">
+                  <img id="embedFooterIcon" /><span id="embedFooterText"></span>
+                  <span id="embedFooterTime" style="display:none;"> • hoy</span>
+                </div>
+              </div>
+              <div class="discord-embed-thumb" id="embedThumb" style="display:none;"><img id="embedThumbImg" /></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p><small id="previewStatus">Cargando...</small></p>
+    </aside>
+  </main>
+
+  <script>
+    const guildId = '<%= guild.id %>';
+    const form = document.getElementById('configForm');
+    const previewImg = document.getElementById('previewImg');
+    const previewSkeleton = document.getElementById('previewSkeleton');
+    const previewStatus = document.getElementById('previewStatus');
+    const saveBadge = document.getElementById('saveBadge');
+    let previewTimer = null;
+    let currentType = 'welcome';
+    let dirty = false;
+
+    const PRESETS = {
+      gaming: {
+        welcomeCardBgType: 'linear', welcomeCardBgColor: '#0f0f1e', welcomeCardBgColor2: '#7c3aed',
+        welcomeCardBgAngle: 135, welcomeCardBorderEnabled: true, welcomeCardBorderColor: '#00FFB2',
+        welcomeCardBorderWidth: 3, welcomeCardBorderRadius: 12,
+        welcomeCardTitleColor: '#00FFB2', welcomeCardTitleFont: 'RobotoMono',
+        welcomeCardSubtitleColor: '#b5bac1', welcomeCardSubtitleFont: 'RobotoMono',
+        welcomeCardUsernameColor: '#ffffff', welcomeCardUsernameFont: 'RobotoMono',
+        welcomeCardTitleShadow: true, welcomeCardTitleShadowColor: '#00FFB2', welcomeCardTitleShadowBlur: 20,
+        welcomeCardAvatarBorder: '#00FFB2',
+      },
+      elegant: {
+        welcomeCardBgType: 'radial', welcomeCardBgColor: '#1a1a1a', welcomeCardBgColor2: '#000000',
+        welcomeCardBorderEnabled: true, welcomeCardBorderColor: '#d4af37',
+        welcomeCardBorderWidth: 2, welcomeCardBorderRadius: 20,
+        welcomeCardTitleColor: '#d4af37', welcomeCardTitleFont: 'Poppins',
+        welcomeCardSubtitleColor: '#e0e0e0', welcomeCardSubtitleFont: 'Poppins',
+        welcomeCardUsernameColor: '#ffffff', welcomeCardUsernameFont: 'Poppins',
+        welcomeCardTitleShadow: true, welcomeCardTitleShadowColor: '#000000', welcomeCardTitleShadowBlur: 15,
+        welcomeCardAvatarBorder: '#d4af37', welcomeCardAvatarBorderW: 4,
+      },
+      kawaii: {
+        welcomeCardBgType: 'linear', welcomeCardBgColor: '#ffd1dc', welcomeCardBgColor2: '#c8a2ff',
+        welcomeCardBgAngle: 45, welcomeCardBorderEnabled: true, welcomeCardBorderColor: '#ffffff',
+        welcomeCardBorderWidth: 4, welcomeCardBorderRadius: 30,
+        welcomeCardTitleColor: '#ffffff', welcomeCardTitleFont: 'Montserrat',
+        welcomeCardSubtitleColor: '#ffffff', welcomeCardSubtitleFont: 'Montserrat',
+        welcomeCardUsernameColor: '#ffffff', welcomeCardUsernameFont: 'Montserrat',
+        welcomeCardTitleShadow: true, welcomeCardTitleShadowColor: '#ff6b9d', welcomeCardTitleShadowBlur: 12,
+        welcomeCardAvatarBorder: '#ffffff',
+      },
+      minimal: {
+        welcomeCardBgType: 'solid', welcomeCardBgColor: '#2b2d31',
+        welcomeCardBorderEnabled: false,
+        welcomeCardTitleColor: '#ffffff', welcomeCardTitleFont: 'Inter',
+        welcomeCardSubtitleColor: '#949ba4', welcomeCardSubtitleFont: 'Inter',
+        welcomeCardUsername: false,
+        welcomeCardTitleShadow: false,
+        welcomeCardAvatarBorder: '#5865F2',
+      },
+      discord: {
+        welcomeCardBgType: 'linear', welcomeCardBgColor: '#5865F2', welcomeCardBgColor2: '#EB459E',
+        welcomeCardBgAngle: 135, welcomeCardBorderEnabled: false,
+        welcomeCardTitleColor: '#ffffff', welcomeCardTitleFont: 'Inter',
+        welcomeCardSubtitleColor: '#ffffff', welcomeCardSubtitleFont: 'Inter',
+        welcomeCardUsernameColor: '#ffffff', welcomeCardUsernameFont: 'Inter',
+        welcomeCardTitleShadow: true, welcomeCardTitleShadowColor: '#000000', welcomeCardTitleShadowBlur: 10,
+        welcomeCardAvatarBorder: '#ffffff',
+      },
+      cyberpunk: {
+        welcomeCardBgType: 'linear', welcomeCardBgColor: '#0d0221', welcomeCardBgColor2: '#ff00ff',
+        welcomeCardBgAngle: 45, welcomeCardBorderEnabled: true, welcomeCardBorderColor: '#F0DB4F',
+        welcomeCardBorderWidth: 4, welcomeCardBorderRadius: 0,
+        welcomeCardTitleColor: '#F0DB4F', welcomeCardTitleFont: 'RobotoMono',
+        welcomeCardSubtitleColor: '#ff00ff', welcomeCardSubtitleFont: 'RobotoMono',
+        welcomeCardUsernameColor: '#00ffff', welcomeCardUsernameFont: 'RobotoMono',
+        welcomeCardTitleShadow: true, welcomeCardTitleShadowColor: '#ff00ff', welcomeCardTitleShadowBlur: 25,
+        welcomeCardAvatarBorder: '#F0DB4F', welcomeCardAvatarBorderW: 4,
+      },
+    };
+
+    const PALETTES = {
+      discord:   { c1: '#5865F2', c2: '#EB459E', border: '#ffffff' },
+      cyberpunk: { c1: '#F0DB4F', c2: '#FF00FF', border: '#00ffff' },
+      pastel:    { c1: '#FFB3BA', c2: '#BAE1FF', border: '#ffffff' },
+      neon:      { c1: '#00FFB2', c2: '#FF006E', border: '#ffffff' },
+      minimal:   { c1: '#2b2d31', c2: '#dbdee1', border: '#5865F2' },
+      sunset:    { c1: '#FF6B6B', c2: '#FFD93D', border: '#ffffff' },
+    };
+
+    function setFieldValue(el, value) {
+      if (!el) return;
+      if (el instanceof RadioNodeList) {
+        el.forEach?.(node => setFieldValue(node, value));
+        return;
+      }
+      if (el.type === 'checkbox' || el.type === 'radio') el.checked = !!value;
+      else el.value = value;
+    }
+
+    function applyPreset(prefix, presetName) {
+      const preset = PRESETS[presetName];
+      if (!preset) return;
+      for (const [key, value] of Object.entries(preset)) {
+        const fieldName = key.replace(/^welcome/, prefix);
+        setFieldValue(form.elements[fieldName], value);
+      }
+      setDirty(true);
+      updatePreview(currentType);
+    }
+
+    function applyPalette(prefix, paletteName) {
+      const p = PALETTES[paletteName];
+      if (!p) return;
+      setFieldValue(form.elements[`${prefix}CardBgColor`], p.c1);
+      setFieldValue(form.elements[`${prefix}CardBgColor2`], p.c2);
+      setFieldValue(form.elements[`${prefix}CardBorderColor`], p.border);
+      setFieldValue(form.elements[`${prefix}CardTitleColor`], p.c1);
+      setFieldValue(form.elements[`${prefix}CardAvatarBorder`], p.border);
+      setFieldValue(form.elements[`${prefix}CardBgType`], 'linear');
+      setDirty(true);
+      updatePreview(currentType);
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelector(`.tab-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    function setDirty(value) {
+      dirty = value;
+      if (value) {
+        saveBadge.textContent = '⏳ Cambios sin guardar';
+        saveBadge.className = 'save-badge dirty';
+      } else {
+        saveBadge.textContent = '✅ Todo guardado';
+        saveBadge.className = 'save-badge';
+      }
+    }
+
+    form.addEventListener('submit', () => {
+      dirty = false;
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (dirty) form.requestSubmit();
+      }
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+      if (dirty) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    function getFormValue(name) {
+      const el = form.elements[name];
+      if (!el) return '';
+      if (el.type === 'checkbox') return el.checked;
+      return el.value;
+    }
+
+    function updateMockup() {
+      const prefix = currentType === 'welcome' ? 'welcome' : 'goodbye';
+      const replace = (s) => (s || '')
+        .replaceAll('{user}', 'Usuario').replaceAll('{username}', 'Usuario')
+        .replaceAll('{server}', '<%= guild.name %>').replaceAll('{count}', '18')
+        .replaceAll('{inviter}', 'Invitador');
+
+      document.getElementById('embedBar').style.background = getFormValue(`${prefix}Color`) || '#5865F2';
+      document.getElementById('embedDesc').textContent = replace(getFormValue(`${prefix}Message`));
+
+      const title = replace(getFormValue(`${prefix}EmbedTitle`));
+      const titleEl = document.getElementById('embedTitle');
+      if (title) { titleEl.textContent = title; titleEl.style.display = 'block'; } else titleEl.style.display = 'none';
+
+      const authorName = replace(getFormValue(`${prefix}EmbedAuthorName`));
+      const authorEl = document.getElementById('embedAuthor');
+      if (authorName) {
+        document.getElementById('embedAuthorName').textContent = authorName;
+        const authorIcon = getFormValue(`${prefix}EmbedAuthorIcon`);
+        const iconEl = document.getElementById('embedAuthorIcon');
+        if (authorIcon) { iconEl.src = authorIcon; iconEl.style.display = 'block'; } else iconEl.style.display = 'none';
+        authorEl.style.display = 'flex';
+      } else authorEl.style.display = 'none';
+
+      const thumb = getFormValue(`${prefix}EmbedThumbnail`);
+      const thumbEl = document.getElementById('embedThumb');
+      if (thumb) {
+        document.getElementById('embedThumbImg').src = thumb === 'avatar'
+          ? 'https://cdn.discordapp.com/embed/avatars/0.png' : thumb;
+        thumbEl.style.display = 'block';
+      } else thumbEl.style.display = 'none';
+
+      const footer = replace(getFormValue(`${prefix}EmbedFooter`));
+      const footerEl = document.getElementById('embedFooter');
+      if (footer) {
+        document.getElementById('embedFooterText').textContent = footer;
+        document.getElementById('embedFooterTime').style.display =
+          getFormValue(`${prefix}EmbedTimestamp`) ? 'inline' : 'none';
+        footerEl.style.display = 'flex';
+      } else footerEl.style.display = 'none';
+
+      updateDragMarkers();
+    }
+
+    async function updatePreview(type = currentType) {
+      currentType = type;
+      previewStatus.textContent = '⏳ Generando...';
+      previewSkeleton.style.display = 'flex';
+      previewImg.style.display = 'none';
+
+      updateMockup();
+
+      try {
+        const fd = new FormData();
+        for (const [key, value] of new FormData(form).entries()) {
+          if (typeof value === 'string') fd.append(key, value);
+        }
+        const res = await fetch(`/guilds/${guildId}/preview/${type}`, { method: 'POST', body: fd });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || 'Error');
+        }
+        const blob = await res.blob();
+        previewImg.src = URL.createObjectURL(blob);
+
+        await new Promise((resolve) => {
+          if (previewImg.complete) resolve();
+          else previewImg.onload = () => resolve();
+        });
+
+        previewSkeleton.style.display = 'none';
+        previewImg.style.display = 'block';
+        previewStatus.textContent = '✅ Actualizado';
+        setTimeout(updateDragMarkers, 50);
+      } catch (e) {
+        previewSkeleton.style.display = 'none';
+        previewImg.style.display = 'block';
+        previewStatus.textContent = '❌ ' + e.message;
+      }
+    }
+
+    form.addEventListener('input', () => {
+      setDirty(true);
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(() => updatePreview(currentType), 400);
+    });
+    form.addEventListener('change', () => {
+      setDirty(true);
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(() => updatePreview(currentType), 100);
+    });
+
+    document.querySelectorAll('.preview-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        updatePreview(tab.dataset.preview);
+      });
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        applyPreset(btn.dataset.prefix, btn.dataset.preset);
+      });
+    });
+    document.querySelectorAll('.palette-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        applyPalette(btn.dataset.prefix, btn.dataset.palette);
+      });
+    });
+
+    document.querySelectorAll('.btn-test').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const type = btn.dataset.type;
+        if (!type) return;
+        btn.disabled = true;
+        const orig = btn.textContent;
+        btn.textContent = '⏳ Enviando...';
+        try {
+          const res = await fetch(`/guilds/${guildId}/test/${type}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+          });
+          const data = await res.json();
+          btn.textContent = res.ok ? '✅ Enviado' : '❌ ' + (data.error || 'Error');
+        } catch (err) { btn.textContent = '❌ ' + err.message; }
+        finally { setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 3000); }
+      });
+    });
+
+    document.getElementById('btnSetupVerification')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const btn = e.currentTarget;
+      const orig = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '⏳ Enviando...';
+      try {
+        const res = await fetch(`/guilds/${guildId}/setup-verification`, { method: 'POST' });
+        const data = await res.json();
+        btn.textContent = res.ok ? '✅ Enviado' : '❌ ' + (data.error || 'Error');
+      } catch (err) { btn.textContent = '❌ ' + err.message; }
+      finally { setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 3000); }
+    });
+
+    let guildResources = { channels: [], roles: [] };
+
+    async function loadResources() {
+      try {
+        const res = await fetch(`/guilds/${guildId}/resources`);
+        if (!res.ok) throw new Error('Error cargando recursos');
+        guildResources = await res.json();
+        populateSelects();
+      } catch (e) { console.error(e); }
+    }
+
+    function populateSelects() {
+      buildChannelList('welcomeChannelList', 'welcomeChannel', '<%= config.welcomeChannel ?? '' %>');
+      buildChannelList('goodbyeChannelList', 'goodbyeChannel', '<%= config.goodbyeChannel ?? '' %>');
+      buildChannelList('verificationChannelList', 'verificationChannel', '<%= config.verificationChannel ?? '' %>', true);
+
+      const roleSel = document.getElementById('verificationRoleId');
+      if (roleSel) {
+        const currentRole = '<%= config.verificationRoleId ?? '' %>';
+        roleSel.innerHTML = '<option value="">— Sin configurar —</option>';
+        guildResources.roles.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id; opt.textContent = `@${r.name}`;
+          if (r.id === currentRole) opt.selected = true;
+          roleSel.appendChild(opt);
+        });
+      }
+
+      const autoRoleList = document.getElementById('autoRoleList');
+      const autoRoleInput = document.getElementById('welcomeAutoRoleIds');
+      if (autoRoleList && autoRoleInput) {
+        const selected = (autoRoleInput.value || '').split(',').map(s => s.trim()).filter(Boolean);
+        if (guildResources.roles.length === 0) { autoRoleList.innerHTML = '<p><small>Sin roles.</small></p>'; return; }
+        autoRoleList.innerHTML = '';
+        guildResources.roles.forEach(r => {
+          const label = document.createElement('label');
+          label.className = 'role-item';
+          label.dataset.search = r.name.toLowerCase();
+          const cb = document.createElement('input');
+          cb.type = 'checkbox'; cb.value = r.id; cb.checked = selected.includes(r.id);
+          cb.addEventListener('change', () => updateMultiSelect('autoRoleList', 'welcomeAutoRoleIds'));
+          const dot = document.createElement('span');
+          dot.className = 'role-dot';
+          dot.style.background = r.color === '#000000' ? '#99aab5' : r.color;
+          const name = document.createElement('span');
+          name.className = 'role-name'; name.textContent = r.name;
+          label.append(cb, dot, name);
+          autoRoleList.appendChild(label);
+        });
+      }
+    }
+
+    function buildChannelList(containerId, inputId, currentValue, singleOnly = false) {
+      const container = document.getElementById(containerId);
+      const input = document.getElementById(inputId);
+      if (!container || !input) return;
+      const selected = (currentValue || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (guildResources.channels.length === 0) { container.innerHTML = '<p><small>Sin canales.</small></p>'; return; }
+      container.innerHTML = '';
+      guildResources.channels.forEach(ch => {
+        const label = document.createElement('label');
+        label.className = 'role-item';
+        label.dataset.search = ch.name.toLowerCase();
+        const cb = document.createElement('input');
+        cb.type = singleOnly ? 'radio' : 'checkbox';
+        cb.name = singleOnly ? `${inputId}_radio` : undefined;
+        cb.value = ch.id; cb.checked = selected.includes(ch.id);
+        cb.addEventListener('change', () => {
+          if (singleOnly) container.querySelectorAll('input').forEach(i => { if (i !== cb) i.checked = false; });
+          updateMultiSelect(containerId, inputId);
+        });
+        const icon = document.createElement('span');
+        icon.className = 'channel-icon'; icon.textContent = ch.type === 5 ? '📢' : '#';
+        const name = document.createElement('span');
+        name.className = 'role-name'; name.textContent = ch.name;
+        label.append(cb, icon, name);
+        container.appendChild(label);
+      });
+    }
+
+    function updateMultiSelect(containerId, inputId) {
+      const container = document.getElementById(containerId);
+      const input = document.getElementById(inputId);
+      if (!container || !input) return;
+      input.value = [...container.querySelectorAll('input:checked')].map(cb => cb.value).join(',');
+      setDirty(true);
+    }
+
+    document.querySelectorAll('.search-box').forEach(box => {
+      box.addEventListener('input', () => {
+        const targetId = box.dataset.searchFor;
+        const container = document.getElementById(targetId);
+        if (!container) return;
+        const q = box.value.toLowerCase().trim();
+        container.querySelectorAll('.role-item').forEach(item => {
+          const text = (item.dataset.search || item.textContent).toLowerCase();
+          item.style.display = q === '' || text.includes(q) ? '' : 'none';
+        });
+      });
+    });
+
+    const dragMarkers = {
+      avatar: document.getElementById('markerAvatar'),
+      username: document.getElementById('markerUsername'),
+      title: document.getElementById('markerTitle'),
+      subtitle: document.getElementById('markerSubtitle'),
+    };
+
+    function updateDragMarkers() {
+      const prefix = currentType === 'welcome' ? 'welcome' : 'goodbye';
+      const wrapper = document.getElementById('previewWrapper');
+      if (!wrapper || !previewImg.naturalWidth) return;
+
+      const rect = previewImg.getBoundingClientRect();
+      const ratio = rect.width / previewImg.naturalWidth;
+
+      const fields = {
+        avatar:   { x: Number(form.elements[`${prefix}CardAvatarX`]?.value) || 0,   y: Number(form.elements[`${prefix}CardAvatarY`]?.value) || 0,   visible: true },
+        username: { x: Number(form.elements[`${prefix}CardUsernameX`]?.value) || 0, y: Number(form.elements[`${prefix}CardUsernameY`]?.value) || 0, visible: getFormValue(`${prefix}CardUsername`) },
+        title:    { x: Number(form.elements[`${prefix}CardTitleX`]?.value) || 0,    y: Number(form.elements[`${prefix}CardTitleY`]?.value) || 0,    visible: true },
+        subtitle: { x: Number(form.elements[`${prefix}CardSubtitleX`]?.value) || 0, y: Number(form.elements[`${prefix}CardSubtitleY`]?.value) || 0, visible: true },
+      };
+
+      const cardW = previewImg.naturalWidth;
+
+      Object.entries(dragMarkers).forEach(([key, marker]) => {
+        const f = fields[key];
+        if (!marker) return;
+        if (!f.visible) { marker.style.display = 'none'; return; }
+        const cx = (cardW / 2 + f.x) * ratio;
+        const cy = f.y * ratio;
+        marker.style.display = 'flex';
+        marker.style.left = cx + 'px';
+        marker.style.top = cy + 'px';
+      });
+    }
+
+    let dragging = null;
+    let dragStart = { x: 0, y: 0, fieldX: 0, fieldY: 0 };
+
+    function startDrag(marker, e) {
+      const target = marker.dataset.target;
+      const prefix = currentType === 'welcome' ? 'welcome' : 'goodbye';
+      const fieldMap = {
+        avatar: `${prefix}CardAvatar`,
+        username: `${prefix}CardUsername`,
+        title: `${prefix}CardTitle`,
+        subtitle: `${prefix}CardSubtitle`,
+      };
+      const base = fieldMap[target];
+      if (!base) return;
+
+      e.preventDefault();
+      dragging = { target, base, pointerId: e.pointerId };
+      dragStart = {
+        x: e.clientX,
+        y: e.clientY,
+        fieldX: Number(form.elements[`${base}X`]?.value) || 0,
+        fieldY: Number(form.elements[`${base}Y`]?.value) || 0,
+      };
+      marker.setPointerCapture(e.pointerId);
+      marker.classList.add('dragging');
+    }
+
+    function moveDrag(marker, e) {
+      if (!dragging) return;
+      const rect = previewImg.getBoundingClientRect();
+      const ratio = previewImg.naturalWidth / rect.width;
+      const dx = (e.clientX - dragStart.x) * ratio;
+      const dy = (e.clientY - dragStart.y) * ratio;
+
+      const newX = Math.round(dragStart.fieldX + dx);
+      const newY = Math.round(dragStart.fieldY + dy);
+
+      const elX = form.elements[`${dragging.base}X`];
+      const elY = form.elements[`${dragging.base}Y`];
+      if (elX) elX.value = newX;
+      if (elY) elY.value = newY;
+
+      const px = (previewImg.naturalWidth / 2 + newX) * (rect.width / previewImg.naturalWidth);
+      const py = newY * (rect.width / previewImg.naturalWidth);
+      marker.style.left = px + 'px';
+      marker.style.top = py + 'px';
+
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(() => updatePreview(currentType), 600);
+      setDirty(true);
+    }
+
+    function endDrag(marker, e) {
+      if (!dragging) return;
+      try { marker.releasePointerCapture(e.pointerId); } catch {}
+      marker.classList.remove('dragging');
+      dragging = null;
+      updatePreview(currentType);
+    }
+
+    Object.values(dragMarkers).forEach(marker => {
+      if (!marker) return;
+      marker.addEventListener('pointerdown', (e) => startDrag(marker, e));
+      marker.addEventListener('pointermove', (e) => moveDrag(marker, e));
+      marker.addEventListener('pointerup', (e) => endDrag(marker, e));
+      marker.addEventListener('pointercancel', (e) => endDrag(marker, e));
+    });
+
+    previewImg.addEventListener('load', updateDragMarkers);
+    window.addEventListener('resize', updateDragMarkers);
+
+    if (new URLSearchParams(location.search).get('saved') === '1') {
+      setDirty(false);
+      const toast = document.createElement('div');
+      toast.className = 'toast'; toast.textContent = '✅ Cambios guardados';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    } else setDirty(false);
+
+    loadResources();
+    updatePreview('welcome');
+  </script>
+</body>
+</html>

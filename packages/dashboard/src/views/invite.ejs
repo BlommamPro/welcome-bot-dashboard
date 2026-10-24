@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invitar al bot — <%= guild.name %></title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="center">
+  <div class="card" style="text-align:center;max-width:500px;">
+    <h1>🤖 Bot no invitado</h1>
+    <p>El bot no está en <strong><%= guild.name %></strong> todavía.</p>
+    <p>Invítalo primero para poder configurar bienvenidas y despedidas.</p>
+    <a class="btn"
+       href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&permissions=268454928&scope=bot%20applications.commands&guild_id=<%= guild.id %>&disable_guild_select=true"
+       target="_blank">
+      ➕ Invitar al bot
+    </a>
+    <p style="margin-top:2rem;"><a href="/guilds" style="color:#a8b1ff;">← Volver a la lista</a></p>
+  </div>
+</body>
+</html>

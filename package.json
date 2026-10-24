@@ -1,0 +1,13 @@
+{
+  "name": "discord-welcome-bot",
+  "private": true,
+  "scripts": {
+    "dev:bot": "pnpm --filter bot dev",
+    "dev:dashboard": "pnpm --filter dashboard dev",
+    "db:push": "pnpm --filter shared db:push",
+    "db:studio": "pnpm --filter shared db:studio"
+  },
+  "dependencies": {
+    "canvas-forge": "^1.2.0"
+  }
+}
